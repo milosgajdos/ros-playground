@@ -1,6 +1,6 @@
 # ros-playground
 
-This repo contains a collection of [ROS](http://wiki.ros.org/) samples written in `C++` using `roscpp` library.
+This repo contains a collection of [ROS](http://wiki.ros.org/) samples written in `C++` and `Python` using either or both of `roscpp` and `rospy` libraries.
 
 ## Environment setup
 
@@ -34,4 +34,17 @@ melodic
 ```
 If everything went fine, you should now be ready to start hacking on `ROS`.
 
-**NOTE:** `ros:ros-playground` image `Dockerfile` creates `rosuser` with `sudo` privileges and [ROS workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace) in `ros_ws` directory inside home directory of `rosuser`. You should do most of the work inside the workspace
+**NOTE:** `ros:ros-playground` image `Dockerfile` creates `rosuser` with `sudo` privileges and its own dedicated [ROS workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace) in `$HOME/ros_ws` directory. You will do most of the work inside the workspace. Furthermore, the `.bashrc` script `source`s ROS environment setup so you don't have to do it manually.
+
+`ROS` uses `~/.ros/` for various things like storing logs and debugging info, so if you want to persist this directory you'll have to mount it in as a volume into `rosuser` home directory:
+
+```
+$ docker run -it --rm -v "$PWD/.ros/:/home/rosuser/.ros" ros:ros-playground ls -la
+drwxr-xr-x 1 rosuser rosuser 4096 Apr  2 00:38 .
+drwxr-xr-x 1 root    root    4096 Apr  2 00:33 ..
+-rw-r--r-- 1 rosuser rosuser  220 Apr  4  2018 .bash_logout
+-rw-r--r-- 1 rosuser rosuser 3771 Apr  4  2018 .bashrc
+-rw-r--r-- 1 rosuser rosuser  807 Apr  4  2018 .profile
+drwxr-xr-x 2 rosuser rosuser   64 Apr  7 21:17 .ros
+drwxr-xr-x 5 rosuser rosuser 4096 Apr  2 00:38 ros_ws
+```

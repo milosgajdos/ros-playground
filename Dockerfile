@@ -13,6 +13,7 @@ RUN groupadd -g 999 rosuser && \
 RUN echo "rosuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 USER rosuser
 WORKDIR /home/rosuser
+RUN echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
 
 # we need to source the setup.bash
 SHELL ["/bin/bash", "-c"]
@@ -21,5 +22,7 @@ SHELL ["/bin/bash", "-c"]
 RUN rosdep update \
     && source /opt/ros/melodic/setup.bash \
     && mkdir -p ~/ros_ws/src \
+    && cd ~/ros_ws/src \
+    && catkin_init_workspace \
     && cd ~/ros_ws/ \
     && catkin_make
